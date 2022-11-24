@@ -4,6 +4,7 @@ pragma solidity ^0.8.7;
 // Import statements
 import "../node_modules/hardhat/console.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "./DProduct.sol";
 
 // Contracts
 contract Users is AccessControl {
@@ -34,6 +35,7 @@ contract Users is AccessControl {
         string email;
         uint256 ssn;
         string location;
+        uint256[] product_ids;
     }
 
     struct Manufacturer {
@@ -107,6 +109,7 @@ contract Users is AccessControl {
     function makeDesigner(address _designer, string memory _name, string memory _surname, uint64 _number, string memory _email, uint256 _ssn, string memory _location) public {
         grantRole(DESIGNER_ROLE, _designer);
         grantRole(CUSTOMER_ROLE, _designer);
+        uint256[] memory product_ids;
         Designer memory new_designer = Designer(
             _designer,
             ++s_d_id,
@@ -115,7 +118,8 @@ contract Users is AccessControl {
             _number,
             _email,
             _ssn,
-            _location
+            _location,
+            product_ids
         );
         designers[_designer] = new_designer;
         id_designers[s_d_id] = new_designer;
