@@ -57,8 +57,6 @@ describe("Website", async function(){
             await users.makeDesigner(addr1.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
             const designer1 = await users.designerProfile(addr1.address)
             assert(designer1.name.toString() == "Designer")
-            const designerInMapping = await users.id_designers(designer1.id)
-            assert(designerInMapping.name.toString() == designer1.name.toString())
         })
         it("Emits designer created", async function(){
             await expect(users.makeDesigner(addr1.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")).to.emit(users, "DesignerCreated").withArgs(addr1.address, 1, "Designer", "designer1", "mail@mail.com", 56921475842)
@@ -86,8 +84,6 @@ describe("Website", async function(){
             await users.makeManufacturer(addr1.address, "Manufacturer", "manufacturer1", 5849851245, "mail@mail.com", 56921475842, "location")
             const manufacturer1 = await users.manufacturerProfile(addr1.address)
             assert(manufacturer1.name.toString() == "Manufacturer")
-            const manufacturerInMapping = await users.id_manufacturers(manufacturer1.id)
-            assert(manufacturerInMapping.name.toString() == manufacturer1.name.toString())
         })
         it("Emits manufacturer created", async function(){
             await expect(users.makeManufacturer(addr1.address, "Manufacturer", "manufacturer1", 5849851245, "mail@mail.com", 56921475842, "location")).to.emit(users, "ManufacturerCreated").withArgs(addr1.address, 1, "Manufacturer", "mail@mail.com", 56921475842)

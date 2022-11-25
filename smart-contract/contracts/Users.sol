@@ -35,7 +35,6 @@ contract Users is AccessControl {
         string email;
         uint256 ssn;
         string location;
-        uint256[] product_ids;
     }
 
     struct Manufacturer {
@@ -73,12 +72,9 @@ contract Users is AccessControl {
         uint256 indexed ssn
     );
 
-    mapping(address => Customer) private customers;
-    mapping(address => Designer) private designers;
-    mapping(address => Manufacturer) private manufacturers;
-
-    mapping(uint256 => Designer) public id_designers;
-    mapping(uint256 => Manufacturer) public id_manufacturers;
+    mapping(uint256 => Customer) public customers;
+    mapping(uint256 => Designer) public designers;
+    mapping(uint256 => Manufacturer) public manufacturers;
 
     // Giving the Admin role to the deployer
     constructor() {
@@ -91,14 +87,13 @@ contract Users is AccessControl {
     // Emits an event
     function makeCustomer(address _customer, string memory _name, string memory _surname, uint64 _number) public {
         _setupRole(CUSTOMER_ROLE, _customer);
-        Customer memory new_customer = Customer(
+        customers[++s_c_id] = Customer(
             _customer,
-            ++s_c_id,
+            s_c_id,
             _name,
             _surname,
             _number
         );
-        customers[_customer] = new_customer;
         emit CustomerCreated(_customer, s_c_id, _name, _surname);
     }
 
@@ -109,20 +104,16 @@ contract Users is AccessControl {
     function makeDesigner(address _designer, string memory _name, string memory _surname, uint64 _number, string memory _email, uint256 _ssn, string memory _location) public {
         grantRole(DESIGNER_ROLE, _designer);
         grantRole(CUSTOMER_ROLE, _designer);
-        uint256[] memory product_ids;
-        Designer memory new_designer = Designer(
+        designers[++s_d_id] = Designer(
             _designer,
-            ++s_d_id,
+            s_d_id,
             _name,
             _surname,
             _number,
             _email,
             _ssn,
-            _location,
-            product_ids
+            _location
         );
-        designers[_designer] = new_designer;
-        id_designers[s_d_id] = new_designer;
         emit DesignerCreated(_designer, s_d_id, _name, _surname, _email, _ssn);
     }
 
@@ -133,9 +124,9 @@ contract Users is AccessControl {
     function makeManufacturer(address _manufacturer, string memory _name, string memory _surname, uint64 _number, string memory _email, uint256 _ssn, string memory _location) public {
         grantRole(MANUFACTURER_ROLE, _manufacturer);
         grantRole(CUSTOMER_ROLE, _manufacturer);
-        Manufacturer memory new_manufacturer = Manufacturer(
+        manufacturers[++s_m_id] = Manufacturer(
             _manufacturer,
-            ++s_m_id,
+            s_m_id,
             _name,
             _surname,
             _number,
@@ -143,24 +134,41 @@ contract Users is AccessControl {
             _ssn,
             _location
         );
-        manufacturers[_manufacturer] = new_manufacturer;
-        id_manufacturers[s_m_id] = new_manufacturer;
         emit ManufacturerCreated( _manufacturer, s_m_id, _name, _email, _ssn);
     }
 
     // Returning the single customer for given address
     function customerProfile(address _customer) public view returns(Customer memory){
-        return customers[_customer];
+        Customer memory selected_customer;
+        for(uint256 i = 1; i <= s_c_id; i++){
+            if(customers[i].c_address == _customer) selected_customer = customers[i];
+        }
+        return selected_customer;
     }
     
     // Returning the single designer for given address
     function designerProfile(address _designer) public view returns(Designer memory){
-        return designers[_designer];
+        Designer memory selected_designer;
+        for(uint256 i = 1; i <= s_d_id; i++){
+            if(designers[i].d_address == _designer) selected_designer = designers[i];
+        }
+        return selected_designer;
     }
     
     // Returning the single manufacturer for given address
     function manufacturerProfile(address _manufacturer) public view returns(Manufacturer memory){
-        return manufacturers[_manufacturer];
+        Manufacturer memory selected_manufacturer;
+        for(uint256 i = 1; i <= s_m_id; i++){
+            if(manufacturers[i].m_address == _manufacturer) selected_manufacturer = manufacturers[i];
+        }
+        return selected_manufacturer;
+    }
+
+    function designerLogIn(address _designer) view public returns(bool){
+        for(uint256 i = 1; i<= s_d_id; i++){
+            if(designers[i].d_address == _designer) return true;
+        }
+        return false;
     }
 
 }

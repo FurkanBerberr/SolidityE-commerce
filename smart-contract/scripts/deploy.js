@@ -23,6 +23,11 @@ async function main() {
 
   await users.deployed()
 
+  const DProduct = await hre.ethers.getContractFactory("DProduct")
+  const dProduct = await DProduct.deploy()
+
+  await dProduct.deployed()
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
