@@ -166,7 +166,7 @@ contract Users is AccessControl {
 
     function customerLogin(address _customer) view public returns(bool){
         for(uint256 i = 1; i<= s_d_id; i++){
-            if(customers[i].d_address == _customer) return true;
+            if(customers[i].c_address == _customer) return true;
         }
         return false;
     }
