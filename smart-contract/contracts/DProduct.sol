@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
+// Import statements
 import "./Users.sol";
 import "../node_modules/hardhat/console.sol";
 
+// Custom errors
 error DProduct__ProductDoesNotExist();
 error DProduct__UserIsNotDesigner();
 error DProduct__UserNotOwner();
 
+// Contracts
 contract DProduct is Users {
+
+    // State variables
     uint256 s_p_id;
 
     struct D_product{
@@ -21,6 +26,7 @@ contract DProduct is Users {
 
     mapping(uint256 => D_product) public d_products;
 
+    // Creating the products and adding them in to mapping
     function createDProduct(string[] memory _images, string memory _name, string memory _description) public{
         if(!hasRole(DESIGNER_ROLE, msg.sender)) revert DProduct__UserIsNotDesigner();
         D_product memory new_product = D_product(
@@ -34,6 +40,7 @@ contract DProduct is Users {
         s_p_id++;
     }
 
+    /** @return D_product[] returns the all product for given designer */
     function oneDesignerProducts(address _designer) view public returns(D_product[] memory){
         if(!hasRole(DESIGNER_ROLE, _designer)) revert DProduct__UserIsNotDesigner();
         uint256 productCount = 0;
@@ -57,6 +64,7 @@ contract DProduct is Users {
         return products;
     } 
 
+    // Deletes the one product
     function deleteDProduct(uint256 _productId) public {
         address user;
         if(d_products[_productId].owner == user) revert DProduct__ProductDoesNotExist();

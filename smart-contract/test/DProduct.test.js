@@ -2,14 +2,16 @@ const { expect } = require("chai");
 
 
 describe("Product", async function(){
-    let dProduct, deployer, addr1, addr2 
+    let users, dProduct, deployer, addr1, addr2 
 
     beforeEach(async function(){
         const DProduct = await ethers.getContractFactory("DProduct");
+        const Users = await ethers.getContractFactory("Users");
 
         [deployer, addr1, addr2] = await ethers.getSigners();
 
         dProduct = await DProduct.deploy();
+        users = await Users.deploy();
     })
 
     describe("Designers products", function(){
@@ -20,7 +22,7 @@ describe("Product", async function(){
 
         })
         it("Getting the one designer products", async function(){
-            await dProduct.makeDesigner(deployer.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            await users.makeDesigner(deployer.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
             await dProduct.makeDesigner(addr1.address, "Designer2", "designer2", 5849851245, "mail@mail.com", 56921475842, "location")
             await dProduct.createDProduct([], "Tshirt", "Best product")
             await dProduct.createDProduct([], "Tshirt2", "Best product2")
