@@ -73,13 +73,21 @@ contract Market is Users{
     }
 
     function purchaseProduct(uint256 _itemId) external payable{
-        Product storage product = products[_itemId]
+        Product storage product = products[_itemId];
         if(_itemId < 0 && _itemId > itemCount) revert Market__ProductDoesNotExist();
         if(msg.value < product.price) revert Market__NotEnoughGiven();
         if(product.sold) revert Market__ProductSold();
         product.sold = true;
         product.customer = payable(msg.sender);
     }
-
+    // It should be sell function
+    function purchaseProduct(uint256 _itemId) external payable{
+        Product storage product = products[_itemId];
+        if(_itemId < 0 && _itemId > itemCount) revert Market__ProductDoesNotExist();
+        if(msg.value < product.price) revert Market__NotEnoughGiven();
+        if(product.sold) revert Market__ProductSold();
+        product.sold = true;
+        product.customer = payable(msg.sender);
+    }
     // Sell
 }
