@@ -3,7 +3,7 @@ pragma solidity ^0.8.7;
 
 // Import statements
 import "../node_modules/hardhat/console.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "../node_modules/@openzeppelin/contracts/access/AccessControl.sol";
 import "./DProduct.sol";
 
 // Contracts

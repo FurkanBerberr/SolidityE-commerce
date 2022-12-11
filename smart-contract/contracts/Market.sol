@@ -3,7 +3,7 @@ pragma solidity ^0.8.7;
 
 // Import statements
 import "./Users.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 error Market__UserNotDesigner();
 error Market__UserNotManufacturer();

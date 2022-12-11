@@ -22,7 +22,7 @@ describe("Product", async function(){
 
         })
         it("Getting the one designer products", async function(){
-            await users.makeDesigner(deployer.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            await dProduct.makeDesigner(deployer.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
             await dProduct.makeDesigner(addr1.address, "Designer2", "designer2", 5849851245, "mail@mail.com", 56921475842, "location")
             await dProduct.createDProduct([], "Tshirt", "Best product")
             await dProduct.createDProduct([], "Tshirt2", "Best product2")
