@@ -97,13 +97,10 @@ contract Users is AccessControl {
         emit CustomerCreated(_customer, s_c_id, _name, _surname);
     }
 
-    // Giving the Designer and Customer role to the address
     // Creating the designer object
     // Adding the object into the mappings
     // Emits an event
     function makeDesigner(address _designer, string memory _name, string memory _surname, uint64 _number, string memory _email, uint256 _ssn, string memory _location) public {
-        grantRole(DESIGNER_ROLE, _designer);
-        grantRole(CUSTOMER_ROLE, _designer);
         designers[++s_d_id] = Designer(
             _designer,
             s_d_id,
@@ -117,13 +114,16 @@ contract Users is AccessControl {
         emit DesignerCreated(_designer, s_d_id, _name, _surname, _email, _ssn);
     }
 
-    // Giving the Manufacturer and Customer role to the address
+    // Giving the Designer and Customer role to the address
+    function giveDesignerRole(address _designer) public{
+        grantRole(DESIGNER_ROLE, _designer);
+        grantRole(CUSTOMER_ROLE, _designer);
+    }
+
     // Creating the manufacturer object
     // Adding the object into the mappings
     // Emits an event
     function makeManufacturer(address _manufacturer, string memory _name, string memory _surname, uint64 _number, string memory _email, uint256 _ssn, string memory _location) public {
-        grantRole(MANUFACTURER_ROLE, _manufacturer);
-        grantRole(CUSTOMER_ROLE, _manufacturer);
         manufacturers[++s_m_id] = Manufacturer(
             _manufacturer,
             s_m_id,
@@ -135,6 +135,12 @@ contract Users is AccessControl {
             _location
         );
         emit ManufacturerCreated( _manufacturer, s_m_id, _name, _email, _ssn);
+    }
+
+    // Giving the Manufacturer and Customer role to the address
+    function giveManufacturerRole(address _manufacturer) public{
+        grantRole(MANUFACTURER_ROLE, _manufacturer);
+        grantRole(CUSTOMER_ROLE, _manufacturer);
     }
 
     // Returning the single customer for given address
@@ -172,9 +178,12 @@ contract Users is AccessControl {
     }
 
     function designerLogIn(address _designer) view public returns(bool){
-        for(uint256 i = 1; i<= s_d_id; i++){
-            if(designers[i].d_address == _designer) return true;
-        }
+        if(hasRole(DESIGNER_ROLE, _designer)) return true;
+        return false;
+    }
+
+    function manufacturerLogIn(address _manufacturer) view public returns(bool){
+        if(hasRole(MANUFACTURER_ROLE, _manufacturer)) return true;
         return false;
     }
 

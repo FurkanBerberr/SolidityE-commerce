@@ -102,7 +102,6 @@ contract Market is Users{
         product.manufacturer.transfer(product.price - getPercentage(_itemId));
         feeAccount.transfer(totalPrice - product.price);
         product.nft.transferFrom(address(this), msg.sender, product.tokenId);
-
     }
     
     function getTotalPrice(uint256 _itemId) view public returns(uint256){

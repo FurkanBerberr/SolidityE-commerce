@@ -39,6 +39,7 @@ describe("Website", async function(){
         it("Giving designer role to another address as an admin", async function(){
             const d_role = await users.DESIGNER_ROLE()
             await users.makeDesigner(addr1.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            await users.giveDesignerRole(addr1.address)
             const isDesigner = await users.hasRole(d_role, addr1.address)
             expect(isDesigner).to.equal(true)
 
@@ -46,6 +47,7 @@ describe("Website", async function(){
         it("Giving customer role to another address as an admin", async function(){
             const c_role = await users.CUSTOMER_ROLE()
             await users.makeDesigner(addr1.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            await users.giveDesignerRole(addr1.address)
             const isCustomer = await users.hasRole(c_role, addr1.address)
             expect(isCustomer).to.equal(true)
         })
@@ -61,11 +63,20 @@ describe("Website", async function(){
         it("Emits designer created", async function(){
             await expect(users.makeDesigner(addr1.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")).to.emit(users, "DesignerCreated").withArgs(addr1.address, 1, "Designer", "designer1", "mail@mail.com", 56921475842)
         })
+        it("Checks the designer login is working or not", async function(){
+            await users.makeDesigner(addr1.address, "Designer", "designer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            let isLogin = await users.designerLogIn(addr1.address)
+            expect(isLogin).to.equal(false) 
+            await users.giveDesignerRole(addr1.address)
+            isLogin = await users.designerLogIn(addr1.address)
+            expect(isLogin).to.equal(true) 
+        })
     })
     describe("Manufacturer", function(){
         it("Giving manufacturer role to another address as an admin", async function(){
             const m_role = await users.MANUFACTURER_ROLE()
             await users.makeManufacturer(addr1.address, "Manufacturer", "manufacturer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            await users.giveManufacturerRole(addr1.address)
             const isManufacturer = await users.hasRole(m_role, addr1.address)
             expect(isManufacturer).to.equal(true)
 
@@ -73,6 +84,7 @@ describe("Website", async function(){
         it("Giving customer role to another address as an admin", async function(){
             const c_role = await users.CUSTOMER_ROLE()
             await users.makeManufacturer(addr1.address, "Manufacturer", "manufacturer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            await users.giveManufacturerRole(addr1.address)
             const isCustomer = await users.hasRole(c_role, addr1.address)
             expect(isCustomer).to.equal(true)
         })
@@ -87,6 +99,14 @@ describe("Website", async function(){
         })
         it("Emits manufacturer created", async function(){
             await expect(users.makeManufacturer(addr1.address, "Manufacturer", "manufacturer1", 5849851245, "mail@mail.com", 56921475842, "location")).to.emit(users, "ManufacturerCreated").withArgs(addr1.address, 1, "Manufacturer", "mail@mail.com", 56921475842)
+        })
+        it("Checks the manufacturer login is working or not", async function(){
+            await users.makeManufacturer(addr1.address, "Manufacturer", "manufacturer1", 5849851245, "mail@mail.com", 56921475842, "location")
+            let isLogin = await users.manufacturerLogIn(addr1.address)
+            expect(isLogin).to.equal(false) 
+            await users.giveManufacturerRole(addr1.address)
+            isLogin = await users.manufacturerLogIn(addr1.address)
+            expect(isLogin).to.equal(true) 
         })
     })
 
