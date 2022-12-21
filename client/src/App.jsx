@@ -1,33 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import {
+  BrowserRouter, Route, Routes
+} from "react-router-dom";
+import { useState } from "react"
+import { ethers } from "ethers"
+import { Button, Spinner } from "react-bootstrap"
+
+import Users from "./contractsData/Users.json"
+import UsersAddress from "./contractsData/Users-address.json"
+import Market from "./contractsData/Market.json"
+import MarketAddress from "./contractsData/Market-address.json"
+import FProduct from "./contractsData/FProduct.json"
+import FProductAddress from "./contractsData/FProduct-address.json"
+import DProduct from "./contractsData/DProduct.json"
+import DProductAddress from "./contractsData/DProduct-address.json"
+import NavigationBar from "./components/NavigationBar"
+import Home from "./components/Home";
+import Profile from "./components/Profile";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [account, setAccount] = useState(null)
+  const [users, setUsers] = useState(null)
+  const [market, setMarket] = useState({})
+  const [fProduct, setFProduct] = useState({})
+  const [dProduct, setDProduct] = useState({})
+
+  const [isUser, setIsUser] = useState(false)
+  const [isDesigner, setIsDesigner] = useState(false)
+  const [isManufacturer, setIsManufacturer] = useState(false)
+  
+
+  // Metamask connect
+  const web3Handler = async () => {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    setAccount(accounts[0])
+    // Get provider from metamask
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    // Set signer
+    const signer = provider.getSigner()
+
+    loadContracts(signer)
+  }
+  const loadContracts = (signer) => {
+    // Get deployed copies of contracts
+    const users1 = new ethers.Contract(UsersAddress.address, Users.abi, signer)
+    setUsers(users1)
+    const market1 = new ethers.Contract(MarketAddress.address, Market.abi, signer)
+    setMarket(market1)
+    const fProduct1 = new ethers.Contract(FProductAddress.address, FProduct.abi, signer)
+    setFProduct(fProduct1)
+    const dProduct1 = new ethers.Contract(DProductAddress.address, DProduct.abi, signer)
+    setDProduct(dProduct1)
+
+    setLoading(false)
+  }
+
+  const roleCheck = async () => {
+    
+  }
 
   return (
-    <div className="App">
+    <BrowserRouter>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {loading ? (
+          <>
+          <Button onClick={web3Handler} className="bColor">Connect Wallet</Button>
+          <Home/>
+          </>
+        ) : (
+          <>
+          <NavigationBar account={account} loading={loading} users={users}/>
+          <Routes>
+            <Route path="/" element={
+              <Home/>
+            } />
+            <Route path="/profile" element={
+              <Profile users={users} />
+            } />
+            <Route path="/profile" element={
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+                <Spinner animation="border" style={{ display: 'flex' }} />
+                <p className='mx-3 my-0'>Awaiting Metamask Connection...</p>
+              </div>
+            } />
+          </Routes>
+          </>
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    </BrowserRouter>
   )
 }
 
