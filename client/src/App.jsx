@@ -3,7 +3,7 @@ import {
 } from "react-router-dom";
 import { useState } from "react"
 import { ethers } from "ethers"
-import { Button, Spinner } from "react-bootstrap"
+import { Spinner } from "react-bootstrap"
 
 import Users from "./contractsData/Users.json"
 import UsersAddress from "./contractsData/Users-address.json"
@@ -16,6 +16,8 @@ import DProductAddress from "./contractsData/DProduct-address.json"
 import NavigationBar from "./components/NavigationBar"
 import Home from "./components/Home";
 import Profile from "./components/Profile";
+import LoginPage from "./components/LoginPage";
+import Register from "./components/Register";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -63,19 +65,26 @@ function App() {
     <BrowserRouter>
       <div>
         {loading ? (
-          <>
-          <Button onClick={web3Handler} className="bColor">Connect Wallet</Button>
-          <Home/>
-          </>
+          <Routes>
+            <Route path="/" element={
+              <Home web3Handler={web3Handler} account={account}/>
+            } />
+          </Routes>
         ) : (
           <>
           <NavigationBar account={account} loading={loading} users={users}/>
           <Routes>
             <Route path="/" element={
-              <Home/>
+              <Home web3Handler={web3Handler} account={account}/>
             } />
             <Route path="/profile" element={
               <Profile users={users} />
+            } />
+            <Route path="/loginPage" element={
+              <LoginPage/>
+            } />
+            <Route path="/registerPage" element={
+              <Register/>
             } />
             <Route path="/profile" element={
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
