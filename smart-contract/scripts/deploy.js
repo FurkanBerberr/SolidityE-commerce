@@ -19,7 +19,7 @@ async function main() {
   await dProduct.deployed()
 
   const FProduct = await hre.ethers.getContractFactory("FProduct")
-  const fProduct = await FProduct.deploy()
+  const fProduct = await FProduct.deploy(users.address)
 
   await fProduct.deployed()
   

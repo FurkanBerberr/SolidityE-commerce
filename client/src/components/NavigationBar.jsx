@@ -31,10 +31,10 @@ const NavigationBar = ({ account, loading, users }) => {
                         ) : (
                             <Nav className="me-auto">
                                 <Nav.Link as={Link} to="/">Home</Nav.Link>
-                                <Nav.Link as={Link} to="/create">Create</Nav.Link>
+                                <Nav.Link as={Link} to="/createProduct">Create Product</Nav.Link>
+                                <Nav.Link as={Link} to="/createDesign">Create Design</Nav.Link>
                                 <Nav.Link as={Link} to="/my-listed-items">My Listed Items</Nav.Link>
                                 <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
-                                {console.log(f(), isCustomer)}
                             </Nav>
                         )}
                     <Nav>
